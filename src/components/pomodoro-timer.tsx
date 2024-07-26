@@ -26,22 +26,55 @@ interface Props {
 }
 
 export function PomodoroTimer(props: Props) {
-  const [mainTime, setMainTime] = useState(props.pomodoroTime);
-  const [timeCounting, setTimeCounting] = useState(false);
-  const [working, setWorking] = useState(false);
-  const [resting, setResting] = useState(false);
-  const [cyclesQtdManager, setCyclesQtdManager] = useState(
-    new Array(props.cycles - 1).fill(true),
-  );
+  const [mainTime, setMainTime] = useState(() => {
+    const savedTime = localStorage.getItem('pomodoroMainTime');
+    return savedTime ? parseInt(savedTime, 10) : props.pomodoroTime;
+  });
+  const [timeCounting, setTimeCounting] = useState(() => {
+    const savedTimeCounting = localStorage.getItem('pomodoroTimeCounting');
+    return savedTimeCounting === 'true';
+  });
+  const [working, setWorking] = useState(() => {
+    const savedWorking = localStorage.getItem('pomodoroWorking');
+    return savedWorking === 'true';
+  });
+  const [resting, setResting] = useState(() => {
+    const savedResting = localStorage.getItem('pomodoroResting');
+    return savedResting === 'true';
+  });
+  const [cyclesQtdManager, setCyclesQtdManager] = useState(() => {
+    const savedCycles = localStorage.getItem('pomodoroCyclesQtdManager');
+    return savedCycles
+      ? JSON.parse(savedCycles)
+      : new Array(props.cycles - 1).fill(true);
+  });
 
-  const [completedCycles, setCompletedCycles] = useState(0);
-  const [fullWorkingTime, setFullWorkingTime] = useState(0);
-  const [numberOfPomodoros, setNumberOfPomodoros] = useState(0);
+  const [completedCycles, setCompletedCycles] = useState(() => {
+    const savedCompletedCycles = localStorage.getItem(
+      'pomodoroCompletedCycles',
+    );
+    return savedCompletedCycles ? parseInt(savedCompletedCycles, 10) : 0;
+  });
+  const [fullWorkingTime, setFullWorkingTime] = useState(() => {
+    const savedFullWorkingTime = localStorage.getItem(
+      'pomodoroFullWorkingTime',
+    );
+    return savedFullWorkingTime ? parseInt(savedFullWorkingTime, 10) : 0;
+  });
+  const [numberOfPomodoros, setNumberOfPomodoros] = useState(() => {
+    const savedNumberOfPomodoros = localStorage.getItem(
+      'pomodoroNumberOfPomodoros',
+    );
+    return savedNumberOfPomodoros ? parseInt(savedNumberOfPomodoros, 10) : 0;
+  });
 
   useInterval(
     () => {
-      setMainTime(mainTime - 1);
-      if (working) setFullWorkingTime(fullWorkingTime + 1);
+      setMainTime((prevTime) => {
+        const newTime = prevTime - 1;
+        if (working) setFullWorkingTime(fullWorkingTime + 1);
+        return newTime;
+      });
     },
     timeCounting ? 1000 : null,
   );
@@ -52,13 +85,7 @@ export function PomodoroTimer(props: Props) {
     setResting(false);
     setMainTime(props.pomodoroTime);
     audioStartWorking.play();
-  }, [
-    setTimeCounting,
-    setWorking,
-    setResting,
-    setMainTime,
-    props.pomodoroTime,
-  ]);
+  }, [props.pomodoroTime]);
 
   const configureRest = useCallback(
     (Long: boolean) => {
@@ -74,14 +101,7 @@ export function PomodoroTimer(props: Props) {
 
       audioStopWorking.play();
     },
-    [
-      setTimeCounting,
-      setWorking,
-      setResting,
-      setMainTime,
-      props.longRestTime,
-      props.shortRestTime,
-    ],
+    [props.longRestTime, props.shortRestTime],
   );
 
   useEffect(() => {
@@ -96,22 +116,46 @@ export function PomodoroTimer(props: Props) {
     } else if (working && cyclesQtdManager.length <= 0) {
       configureRest(true);
       setCyclesQtdManager(new Array(props.cycles - 1).fill(true));
-      setCompletedCycles(completedCycles + 1);
+      setCompletedCycles((prev) => prev + 1);
     }
 
-    if (working) setNumberOfPomodoros(numberOfPomodoros + 1);
+    if (working) setNumberOfPomodoros((prev) => prev + 1);
     if (resting) configureWork();
   }, [
     working,
     resting,
     mainTime,
     configureRest,
-    setCyclesQtdManager,
     configureWork,
     cyclesQtdManager,
     numberOfPomodoros,
     props.cycles,
+  ]);
+
+  useEffect(() => {
+    localStorage.setItem('pomodoroMainTime', mainTime.toString());
+    localStorage.setItem('pomodoroTimeCounting', timeCounting.toString());
+    localStorage.setItem('pomodoroWorking', working.toString());
+    localStorage.setItem('pomodoroResting', resting.toString());
+    localStorage.setItem(
+      'pomodoroCyclesQtdManager',
+      JSON.stringify(cyclesQtdManager),
+    );
+    localStorage.setItem('pomodoroCompletedCycles', completedCycles.toString());
+    localStorage.setItem('pomodoroFullWorkingTime', fullWorkingTime.toString());
+    localStorage.setItem(
+      'pomodoroNumberOfPomodoros',
+      numberOfPomodoros.toString(),
+    );
+  }, [
+    mainTime,
+    timeCounting,
+    working,
+    resting,
+    cyclesQtdManager,
     completedCycles,
+    fullWorkingTime,
+    numberOfPomodoros,
   ]);
 
   return (
