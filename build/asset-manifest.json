@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/static/css/main.6c1ce07e.css",
+    "main.js": "/static/js/main.59b49dba.js",
+    "static/media/mixkit-bell-notification-933.wav": "/static/media/mixkit-bell-notification-933.a3dd13b67e8debac2288.wav",
+    "static/media/mixkit-achievement-bell-600.wav": "/static/media/mixkit-achievement-bell-600.fe95e484c435a6154d9c.wav",
+    "index.html": "/index.html",
+    "main.6c1ce07e.css.map": "/static/css/main.6c1ce07e.css.map",
+    "main.59b49dba.js.map": "/static/js/main.59b49dba.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6c1ce07e.css",
+    "static/js/main.59b49dba.js"
+  ]
+}
