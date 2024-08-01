@@ -37,6 +37,9 @@ navegue até a pasta onde deseja clonar.
 <sub> Agora você tem uma cópia local do repositório pomodoro que pode ser modificada conforme necessário. </sub>
 
 
+## Install the necessary packages (Install dependencies)
+
+
 
 
 
