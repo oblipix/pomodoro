@@ -18,6 +18,7 @@ https://github.com/user-attachments/assets/acfde8db-f736-4b81-abf3-37edf3b5bd90
 >
 > Uma conta no GitHub (opcional, mas recomendado).
 
+### Install the necessary packages (Install dependencies)
 
 
 **Vamos clonar este repositório passo a passo.**
@@ -37,7 +38,7 @@ navegue até a pasta onde deseja clonar.
 <sub> Agora você tem uma cópia local do repositório pomodoro que pode ser modificada conforme necessário. </sub>
 
 
-## Install the necessary packages (Install dependencies)
+
 
 
 
